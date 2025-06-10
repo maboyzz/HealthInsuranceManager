@@ -57,5 +57,13 @@ public class    SystemUserService {
                 ))
                 .toList();
     }
+    public SystemUser handleGetUserByUsername (String username) {
+        Optional<SystemUser> optionalSystemUser  = this.systemUserRepository.findByUserName(username);
+        if (optionalSystemUser.isPresent()) {
+            return optionalSystemUser.get();
+        } else {
+            return null;
+        }
+    }
 
 }
