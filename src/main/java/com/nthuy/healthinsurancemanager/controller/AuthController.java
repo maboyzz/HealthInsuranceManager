@@ -3,6 +3,7 @@ package com.nthuy.healthinsurancemanager.controller;
 import com.nthuy.healthinsurancemanager.dto.request.LoginDTO;
 import com.nthuy.healthinsurancemanager.dto.response.ResLoginDTO;
 import com.nthuy.healthinsurancemanager.until.SecurityUtil;
+import com.nthuy.healthinsurancemanager.until.annotation.ApiMessage;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,10 +26,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @ApiMessage("Đăng nhập hệ thống")
     public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
         //Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
+                = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
         //xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // create a token

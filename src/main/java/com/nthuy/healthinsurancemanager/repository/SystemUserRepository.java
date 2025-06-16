@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
 
     Optional<SystemUser> findByUserName(String name);
+    boolean existsByUserName(String name);
+    boolean existsById(Long id);
 }

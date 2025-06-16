@@ -2,19 +2,21 @@ package com.nthuy.healthinsurancemanager.controller;
 
 
 
+import com.nthuy.healthinsurancemanager.Exception.IdInvalidEx;
+import com.nthuy.healthinsurancemanager.Exception.UserNameExist;
 import com.nthuy.healthinsurancemanager.dto.request.CreateSystemUserRequest;
+import com.nthuy.healthinsurancemanager.dto.request.UpdateSystemUserRequest;
+import com.nthuy.healthinsurancemanager.dto.response.UpdateSystemUserResponse;
 import com.nthuy.healthinsurancemanager.dto.response.GetSystemUserResponse;
 import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
 import com.nthuy.healthinsurancemanager.service.SystemUserService;
-import jakarta.validation.Valid;
 
+import com.nthuy.healthinsurancemanager.until.annotation.ApiMessage;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,16 +33,47 @@ public class SystemUserController {
 
 
     @PostMapping("/users")
+    @ApiMessage("Tạo người dùng hệ thống mới")
     public ResponseEntity<String> createSystemUser(
-
-            @RequestBody CreateSystemUserRequest createSystemUserRequestsysUser
-    ) {
-        createSystemUserRequestsysUser.setPassWord(passwordEncoder.encode(createSystemUserRequestsysUser.getPassWord()));
-        return ResponseEntity.status(HttpStatus.CREATED).body("User "+this.sysUserService.handleCreateUser(createSystemUserRequestsysUser)+" created successfully");
+            @Valid
+            @RequestBody CreateSystemUserRequest createSystemUserRequest
+    ) throws UserNameExist {
+        boolean userNameExists = this.sysUserService.userNameExists(createSystemUserRequest.getUserName());
+        if (userNameExists){
+            throw new UserNameExist("Username " +
+                    createSystemUserRequest.getUserName() + " đã tồn tại");
+        }
+        createSystemUserRequest.setPassWord(passwordEncoder.encode(createSystemUserRequest.getPassWord()));
+        return ResponseEntity.status(HttpStatus.CREATED).body("User "+this.sysUserService.handleCreateUser(createSystemUserRequest)+" created successfully");
     }
     @GetMapping("/users")
+    @ApiMessage("Lấy danh sách tất cả người dùng hệ thống")
     public ResponseEntity<List<GetSystemUserResponse>> getAllSystemUsers() {
 
         return ResponseEntity.ok(this.sysUserService.handleGetAllSystemUsers());
+    }
+
+    @PutMapping("/users/{id}")
+    @ApiMessage("Cập nhật thông tin người dùng hệ thống")
+    public ResponseEntity<UpdateSystemUserResponse> updateSystemUser(
+            @PathVariable Long id,
+            @Valid
+            @RequestBody UpdateSystemUserRequest updateRequest) throws IdInvalidEx {
+        boolean idExists = this.sysUserService.idExists(id);
+        if (!idExists) {
+            throw new IdInvalidEx("ID " + id + " không tồn tại");
+        }
+        SystemUser updatedUser = this.sysUserService.handleUpdateSystemUser(id, updateRequest);
+        return ResponseEntity.ok().body(this.sysUserService.convertToUpdateSystemUserResponse(updatedUser));
+    }
+    @DeleteMapping("/users/{id}")
+    @ApiMessage("Xóa người dùng hệ thống")
+    public ResponseEntity<String> deleteSystemUser(@PathVariable Long id) throws IdInvalidEx {
+        boolean idExists = this.sysUserService.idExists(id);
+        if (!idExists) {
+            throw new IdInvalidEx("ID " + id + " không tồn tại");
+        }
+        this.sysUserService.handleDeleteSystemUser(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User with ID " + id + " deleted successfully");
     }
 }

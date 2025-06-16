@@ -1,4 +1,4 @@
-package com.nthuy.healthinsurancemanager.repository.entity;
+package com.nthuy.healthinsurancemanager.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

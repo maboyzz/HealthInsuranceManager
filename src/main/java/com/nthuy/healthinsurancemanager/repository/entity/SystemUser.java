@@ -1,5 +1,6 @@
 package com.nthuy.healthinsurancemanager.repository.entity;
 
+import com.nthuy.healthinsurancemanager.constant.EnumGender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public class SystemUser {
     private String userName;
     private String fullName;
     private Date dateOfBirth;
-    private String gender;
+    private EnumGender gender;
     private String idCardNumber;
     private String passWord;
     private String phone;

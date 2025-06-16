@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(name = "role")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,5 +19,7 @@ public class RoleEntity {
 
     @OneToMany(mappedBy = "role")
     private List<SystemUser> users;
+    @OneToMany(mappedBy = "role")
+    private List<UserEntity> userEntities;
 }
 
