@@ -1,7 +1,6 @@
 package com.nthuy.healthinsurancemanager.controller;
 
 
-
 import com.nthuy.healthinsurancemanager.Exception.IdInvalidEx;
 import com.nthuy.healthinsurancemanager.Exception.UserNameExist;
 import com.nthuy.healthinsurancemanager.dto.request.CreateSystemUserRequest;
@@ -43,19 +42,20 @@ public class SystemUserController {
             @RequestBody CreateSystemUserRequest createSystemUserRequest
     ) throws UserNameExist {
         boolean userNameExists = this.sysUserService.userNameExists(createSystemUserRequest.getUserName());
-        if (userNameExists){
+        if (userNameExists) {
             throw new UserNameExist("Username " +
                     createSystemUserRequest.getUserName() + " đã tồn tại");
         }
         createSystemUserRequest.setPassWord(passwordEncoder.encode(createSystemUserRequest.getPassWord()));
-        return ResponseEntity.status(HttpStatus.CREATED).body("User "+this.sysUserService.handleCreateUser(createSystemUserRequest)+" created successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body("User " + this.sysUserService.handleCreateUser(createSystemUserRequest) + " created successfully");
     }
+
     @GetMapping("/sys_users")
     @ApiMessage("Lấy danh sách tất cả người dùng hệ thống")
     public ResponseEntity<ResultPaginationDTO> getAllSystemUsers(
             @Filter Specification<SystemUser> spec,
             Pageable pageable
-            ) {
+    ) {
         return ResponseEntity.ok(this.sysUserService.handleGetAllSystemUsers(spec, pageable));
     }
 
@@ -72,6 +72,7 @@ public class SystemUserController {
         SystemUser updatedUser = this.sysUserService.handleUpdateSystemUser(id, updateRequest);
         return ResponseEntity.ok().body(this.sysUserService.convertToUpdateSystemUserResponse(updatedUser));
     }
+
     @DeleteMapping("/sys_users/{id}")
     @ApiMessage("Xóa người dùng hệ thống")
     public ResponseEntity<String> deleteSystemUser(@PathVariable Long id) throws IdInvalidEx {
