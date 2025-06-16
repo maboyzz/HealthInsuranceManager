@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+
+import java.util.Date;
 
 @Entity
 @Getter
@@ -18,7 +19,7 @@ public class UserEntity {
 
     private String userName;
     private String fullName;
-    private Instant dateOfBirth;
+    private Date dateOfBirth;
     private String gender;
     private String job;
     private String idCardNumber;
@@ -30,4 +31,20 @@ public class UserEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;
+
+    private Date createdAt;
+    private Date updatedAt;
+    private String createdBy;
+    private String updatedBy;
+
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedAt = new Date();
+        this.updatedBy = "system"; // Replace with actual user context if available
+    }
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdAt = new Date();
+        this.createdBy = "system"; // Replace with actual user context if available
+    }
 }

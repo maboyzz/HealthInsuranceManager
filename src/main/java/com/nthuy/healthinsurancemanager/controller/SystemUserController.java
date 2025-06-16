@@ -5,6 +5,7 @@ package com.nthuy.healthinsurancemanager.controller;
 import com.nthuy.healthinsurancemanager.Exception.IdInvalidEx;
 import com.nthuy.healthinsurancemanager.Exception.UserNameExist;
 import com.nthuy.healthinsurancemanager.dto.request.CreateSystemUserRequest;
+import com.nthuy.healthinsurancemanager.dto.request.ResultPaginationDTO;
 import com.nthuy.healthinsurancemanager.dto.request.UpdateSystemUserRequest;
 import com.nthuy.healthinsurancemanager.dto.response.UpdateSystemUserResponse;
 import com.nthuy.healthinsurancemanager.dto.response.GetSystemUserResponse;
@@ -12,7 +13,10 @@ import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
 import com.nthuy.healthinsurancemanager.service.SystemUserService;
 
 import com.nthuy.healthinsurancemanager.until.annotation.ApiMessage;
+import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +36,7 @@ public class SystemUserController {
     }
 
 
-    @PostMapping("/users")
+    @PostMapping("/sys_users")
     @ApiMessage("Tạo người dùng hệ thống mới")
     public ResponseEntity<String> createSystemUser(
             @Valid
@@ -46,14 +50,16 @@ public class SystemUserController {
         createSystemUserRequest.setPassWord(passwordEncoder.encode(createSystemUserRequest.getPassWord()));
         return ResponseEntity.status(HttpStatus.CREATED).body("User "+this.sysUserService.handleCreateUser(createSystemUserRequest)+" created successfully");
     }
-    @GetMapping("/users")
+    @GetMapping("/sys_users")
     @ApiMessage("Lấy danh sách tất cả người dùng hệ thống")
-    public ResponseEntity<List<GetSystemUserResponse>> getAllSystemUsers() {
-
-        return ResponseEntity.ok(this.sysUserService.handleGetAllSystemUsers());
+    public ResponseEntity<ResultPaginationDTO> getAllSystemUsers(
+            @Filter Specification<SystemUser> spec,
+            Pageable pageable
+            ) {
+        return ResponseEntity.ok(this.sysUserService.handleGetAllSystemUsers(spec, pageable));
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/sys_users/{id}")
     @ApiMessage("Cập nhật thông tin người dùng hệ thống")
     public ResponseEntity<UpdateSystemUserResponse> updateSystemUser(
             @PathVariable Long id,
@@ -66,7 +72,7 @@ public class SystemUserController {
         SystemUser updatedUser = this.sysUserService.handleUpdateSystemUser(id, updateRequest);
         return ResponseEntity.ok().body(this.sysUserService.convertToUpdateSystemUserResponse(updatedUser));
     }
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/sys_users/{id}")
     @ApiMessage("Xóa người dùng hệ thống")
     public ResponseEntity<String> deleteSystemUser(@PathVariable Long id) throws IdInvalidEx {
         boolean idExists = this.sysUserService.idExists(id);

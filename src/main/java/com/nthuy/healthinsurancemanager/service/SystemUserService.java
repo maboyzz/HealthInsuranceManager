@@ -1,6 +1,8 @@
 package com.nthuy.healthinsurancemanager.service;
 
+import com.nthuy.healthinsurancemanager.dto.Meta;
 import com.nthuy.healthinsurancemanager.dto.request.CreateSystemUserRequest;
+import com.nthuy.healthinsurancemanager.dto.request.ResultPaginationDTO;
 import com.nthuy.healthinsurancemanager.dto.request.UpdateSystemUserRequest;
 import com.nthuy.healthinsurancemanager.dto.response.UpdateSystemUserResponse;
 import com.nthuy.healthinsurancemanager.dto.response.GetSystemUserResponse;
@@ -10,13 +12,16 @@ import com.nthuy.healthinsurancemanager.repository.SystemUserRepository;
 
 import com.nthuy.healthinsurancemanager.repository.entity.RoleEntity;
 import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class    SystemUserService {
+public class SystemUserService {
 
     private final SystemUserRepository systemUserRepository;
     private final RoleRepository roleRepository;
@@ -29,6 +34,7 @@ public class    SystemUserService {
     public boolean userNameExists(String userName) {
         return this.systemUserRepository.existsByUserName(userName);
     }
+
     public boolean idExists(Long id) {
         return this.systemUserRepository.existsById(id);
     }
@@ -54,9 +60,17 @@ public class    SystemUserService {
         return systemUser.getId();
     }
 
-    public List<GetSystemUserResponse> handleGetAllSystemUsers() {
-        List<SystemUser> systemUsers = this.systemUserRepository.findAll();
-        return systemUsers.stream()
+    public ResultPaginationDTO handleGetAllSystemUsers(Specification<SystemUser> spec, Pageable pageable) {
+        Page<SystemUser> page = systemUserRepository.findAll(spec, pageable);
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPage(page.getTotalPages());
+        meta.setTotal(page.getTotalElements());
+        resultPaginationDTO.setMeta(meta);
+
+        List<GetSystemUserResponse> systemUsers = page.getContent().stream()
                 .map(user -> new GetSystemUserResponse(
                         user.getId(),
                         user.getUserName(),
@@ -66,7 +80,10 @@ public class    SystemUserService {
                         user.getEmail()
                 ))
                 .toList();
+        resultPaginationDTO.setResults(systemUsers);
+        return resultPaginationDTO;
     }
+
     public SystemUser handleUpdateSystemUser(Long id, UpdateSystemUserRequest updateRequest) {
         Optional<SystemUser> userOpt = this.systemUserRepository.findById(id);
         if (userOpt.isPresent()) {
@@ -87,10 +104,11 @@ public class    SystemUserService {
         this.systemUserRepository.deleteById(id);
     }
 
-    public SystemUser handleGetUserByUsername (String username) {
-        Optional<SystemUser> optionalSystemUser  = this.systemUserRepository.findByUserName(username);
+    public SystemUser handleGetUserByUsername(String username) {
+        Optional<SystemUser> optionalSystemUser = this.systemUserRepository.findByUserName(username);
         return optionalSystemUser.orElse(null);
     }
+
     public UpdateSystemUserResponse convertToUpdateSystemUserResponse(SystemUser systemUser) {
         UpdateSystemUserResponse updateSystemUserResponse = new UpdateSystemUserResponse();
         updateSystemUserResponse.setFullName(systemUser.getFullName());

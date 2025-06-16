@@ -2,6 +2,7 @@ package com.nthuy.healthinsurancemanager.dto.request;
 
 import com.nthuy.healthinsurancemanager.constant.EnumGender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,6 +29,7 @@ public class CreateSystemUserRequest {
     private String passWord;
     private String phone;
     private String address;
+    @Email(message = "Email không hợp lệ")
     private String email;
     private int roleID;
 
