@@ -23,7 +23,8 @@ public class CreateSystemUserRequest {
     private String fullName;
     private Date dateOfBirth;
     private EnumGender gender;
-    @NotBlank(message = "Id card number Không được để trống")
+    @NotBlank(message = "Số CCCD không được để trống")
+    @Size(min = 10, max = 10, message = "Số CMND/CCCD phải có đúng 10 ký tự")
     private String idCardNumber;
     @NotBlank(message = "Password Không được để trống")
     private String passWord;

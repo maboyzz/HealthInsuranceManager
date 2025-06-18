@@ -22,7 +22,8 @@ public class CreateUserEntityReq {
     private Date dateOfBirth;
     private String gender;
     private String job;
-    @NotBlank(message = "idCardNumber Không được để trống")
+    @NotBlank(message = "Số CCCD không được để trống")
+    @Size(min = 10, max = 10, message = "Số CMND/CCCD phải có đúng 10 ký tự")
     private String idCardNumber;
     private String passWord;
     private String phone;

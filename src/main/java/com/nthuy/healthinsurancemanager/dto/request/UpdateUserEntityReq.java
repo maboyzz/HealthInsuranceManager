@@ -1,6 +1,5 @@
 package com.nthuy.healthinsurancemanager.dto.request;
 
-import com.nthuy.healthinsurancemanager.constant.EnumGender;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -10,12 +9,15 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class UpdateSystemUserRequest {
-    @NotBlank(message = "tên không đươc để trống")
+public class UpdateUserEntityReq {
+
+    @NotBlank(message = "Họ và tên không được để trống")
+    @Size(min = 6, max = 30, message = "Họ và tên phải có độ dài từ 6 đến 30 ký tự")
     private String fullName;
     private Date dateOfBirth;
-    private EnumGender gender;
-    @NotBlank(message = "CCCD không đươc để trống")
+    private String gender;
+    private String job;
+    @NotBlank(message = "Số CCCD không được để trống")
     @Size(min = 10, max = 10, message = "Số CMND/CCCD phải có đúng 10 ký tự")
     private String idCardNumber;
     private String phone;
