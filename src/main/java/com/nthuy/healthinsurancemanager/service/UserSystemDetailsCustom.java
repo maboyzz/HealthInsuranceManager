@@ -1,6 +1,6 @@
 package com.nthuy.healthinsurancemanager.service;
 
-import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
+import com.nthuy.healthinsurancemanager.repository.entity.SystemUserEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,7 @@ public class UserSystemDetailsCustom implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SystemUser sysUser = this.systemUserService.handleGetUserByUsername(username);
+        SystemUserEntity sysUser = this.systemUserService.handleGetUserByUsername(username);
         if (sysUser == null) {
             throw new UsernameNotFoundException("username/password không hợp lệ");
         }

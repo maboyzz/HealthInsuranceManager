@@ -17,9 +17,9 @@ public class RoleEntity {
     private String name;
     private String description; // Admin, Nhân viên, Người dùng,...
 
-    @OneToMany(mappedBy = "role")
-    private List<SystemUser> users;
-    @OneToMany(mappedBy = "role")
-    private List<UserEntity> userEntities;
+//    @OneToMany(mappedBy = "role")
+//    private List<SystemUser> users;
+//    @OneToMany(mappedBy = "role")
+//    private List<UserEntity> userEntities;
 }
 

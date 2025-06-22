@@ -11,7 +11,7 @@ import com.nthuy.healthinsurancemanager.repository.SystemUserRepository;
 
 
 import com.nthuy.healthinsurancemanager.repository.entity.RoleEntity;
-import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
+import com.nthuy.healthinsurancemanager.repository.entity.SystemUserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,27 +41,27 @@ public class SystemUserService {
 
 
     public Long handleCreateUser(CreateSystemUserRequest sysUser) {
-        SystemUser systemUser = new SystemUser();
-        systemUser.setEmail(sysUser.getEmail());
-        systemUser.setUserName(sysUser.getUserName());
-        systemUser.setFullName(sysUser.getFullName());
-        systemUser.setGender(sysUser.getGender());
-        systemUser.setPassWord(sysUser.getPassWord());
-        systemUser.setAddress(sysUser.getAddress());
-        systemUser.setPhone(sysUser.getPhone());
+        SystemUserEntity systemUserEntity = new SystemUserEntity();
+        systemUserEntity.setEmail(sysUser.getEmail());
+        systemUserEntity.setUserName(sysUser.getUserName());
+        systemUserEntity.setFullName(sysUser.getFullName());
+        systemUserEntity.setGender(sysUser.getGender());
+        systemUserEntity.setPassWord(sysUser.getPassWord());
+        systemUserEntity.setAddress(sysUser.getAddress());
+        systemUserEntity.setPhone(sysUser.getPhone());
         Optional<RoleEntity> role = this.roleRepository.findById(sysUser.getRoleID());
         if (role.isPresent()) {
             RoleEntity roleEntity = role.get();
-            systemUser.setRole(roleEntity);
+            systemUserEntity.setRole(roleEntity);
         }
-        systemUser.setDateOfBirth(sysUser.getDateOfBirth());
-        systemUser.setIdCardNumber(sysUser.getIdCardNumber());
-        systemUser = systemUserRepository.save(systemUser);
-        return systemUser.getId();
+        systemUserEntity.setDateOfBirth(sysUser.getDateOfBirth());
+        systemUserEntity.setIdCardNumber(sysUser.getIdCardNumber());
+        systemUserEntity = systemUserRepository.save(systemUserEntity);
+        return systemUserEntity.getId();
     }
 
-    public ResultPaginationDTO handleGetAllSystemUsers(Specification<SystemUser> spec, Pageable pageable) {
-        Page<SystemUser> page = systemUserRepository.findAll(spec, pageable);
+    public ResultPaginationDTO handleGetAllSystemUsers(Specification<SystemUserEntity> spec, Pageable pageable) {
+        Page<SystemUserEntity> page = systemUserRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         Meta meta = new Meta();
         meta.setPage(pageable.getPageNumber() + 1);
@@ -84,10 +84,10 @@ public class SystemUserService {
         return resultPaginationDTO;
     }
 
-    public SystemUser handleUpdateSystemUser(Long id, UpdateSystemUserRequest updateRequest) {
-        Optional<SystemUser> userOpt = this.systemUserRepository.findById(id);
+    public SystemUserEntity handleUpdateSystemUser(Long id, UpdateSystemUserRequest updateRequest) {
+        Optional<SystemUserEntity> userOpt = this.systemUserRepository.findById(id);
         if (userOpt.isPresent()) {
-            SystemUser user = userOpt.get();
+            SystemUserEntity user = userOpt.get();
             user.setFullName(updateRequest.getFullName());
             user.setGender(updateRequest.getGender());
             user.setAddress(updateRequest.getAddress());
@@ -104,19 +104,19 @@ public class SystemUserService {
         this.systemUserRepository.deleteById(id);
     }
 
-    public SystemUser handleGetUserByUsername(String username) {
-        Optional<SystemUser> optionalSystemUser = this.systemUserRepository.findByUserName(username);
+    public SystemUserEntity handleGetUserByUsername(String username) {
+        Optional<SystemUserEntity> optionalSystemUser = this.systemUserRepository.findByUserName(username);
         return optionalSystemUser.orElse(null);
     }
 
-    public UpdateSystemUserResponse convertToUpdateSystemUserResponse(SystemUser systemUser) {
+    public UpdateSystemUserResponse convertToUpdateSystemUserResponse(SystemUserEntity systemUserEntity) {
         UpdateSystemUserResponse updateSystemUserResponse = new UpdateSystemUserResponse();
-        updateSystemUserResponse.setFullName(systemUser.getFullName());
-        updateSystemUserResponse.setGender(systemUser.getGender());
-        updateSystemUserResponse.setAddress(systemUser.getAddress());
-        updateSystemUserResponse.setPhone(systemUser.getPhone());
-        updateSystemUserResponse.setDateOfBirth(systemUser.getDateOfBirth());
-        updateSystemUserResponse.setIdCardNumber(systemUser.getIdCardNumber());
+        updateSystemUserResponse.setFullName(systemUserEntity.getFullName());
+        updateSystemUserResponse.setGender(systemUserEntity.getGender());
+        updateSystemUserResponse.setAddress(systemUserEntity.getAddress());
+        updateSystemUserResponse.setPhone(systemUserEntity.getPhone());
+        updateSystemUserResponse.setDateOfBirth(systemUserEntity.getDateOfBirth());
+        updateSystemUserResponse.setIdCardNumber(systemUserEntity.getIdCardNumber());
         return updateSystemUserResponse;
     }
 

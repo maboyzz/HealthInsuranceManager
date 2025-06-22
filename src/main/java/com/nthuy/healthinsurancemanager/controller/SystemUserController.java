@@ -1,14 +1,13 @@
 package com.nthuy.healthinsurancemanager.controller;
 
 
-import com.nthuy.healthinsurancemanager.Exception.IdInvalidEx;
-import com.nthuy.healthinsurancemanager.Exception.UserNameExist;
+import com.nthuy.healthinsurancemanager.Exception.IdInvalidException;
+import com.nthuy.healthinsurancemanager.Exception.UserNameExisted;
 import com.nthuy.healthinsurancemanager.dto.request.CreateSystemUserRequest;
 import com.nthuy.healthinsurancemanager.dto.request.ResultPaginationDTO;
 import com.nthuy.healthinsurancemanager.dto.request.UpdateSystemUserRequest;
 import com.nthuy.healthinsurancemanager.dto.response.UpdateSystemUserResponse;
-import com.nthuy.healthinsurancemanager.dto.response.GetSystemUserResponse;
-import com.nthuy.healthinsurancemanager.repository.entity.SystemUser;
+import com.nthuy.healthinsurancemanager.repository.entity.SystemUserEntity;
 import com.nthuy.healthinsurancemanager.service.SystemUserService;
 
 import com.nthuy.healthinsurancemanager.until.annotation.ApiMessage;
@@ -20,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class SystemUserController {
@@ -40,10 +37,10 @@ public class SystemUserController {
     public ResponseEntity<String> createSystemUser(
             @Valid
             @RequestBody CreateSystemUserRequest createSystemUserRequest
-    ) throws UserNameExist {
+    ) throws UserNameExisted {
         boolean userNameExists = this.sysUserService.userNameExists(createSystemUserRequest.getUserName());
         if (userNameExists) {
-            throw new UserNameExist("Username " +
+            throw new UserNameExisted("Username " +
                     createSystemUserRequest.getUserName() + " đã tồn tại");
         }
         createSystemUserRequest.setPassWord(passwordEncoder.encode(createSystemUserRequest.getPassWord()));
@@ -53,7 +50,7 @@ public class SystemUserController {
     @GetMapping("/sys_users")
     @ApiMessage("Lấy danh sách tất cả người dùng hệ thống")
     public ResponseEntity<ResultPaginationDTO> getAllSystemUsers(
-            @Filter Specification<SystemUser> spec,
+            @Filter Specification<SystemUserEntity> spec,
             Pageable pageable
     ) {
         return ResponseEntity.ok(this.sysUserService.handleGetAllSystemUsers(spec, pageable));
@@ -64,21 +61,21 @@ public class SystemUserController {
     public ResponseEntity<UpdateSystemUserResponse> updateSystemUser(
             @PathVariable Long id,
             @Valid
-            @RequestBody UpdateSystemUserRequest updateRequest) throws IdInvalidEx {
+            @RequestBody UpdateSystemUserRequest updateRequest) throws IdInvalidException {
         boolean idExists = this.sysUserService.idExists(id);
         if (!idExists) {
-            throw new IdInvalidEx("ID " + id + " không tồn tại");
+            throw new IdInvalidException("ID " + id + " không tồn tại");
         }
-        SystemUser updatedUser = this.sysUserService.handleUpdateSystemUser(id, updateRequest);
+        SystemUserEntity updatedUser = this.sysUserService.handleUpdateSystemUser(id, updateRequest);
         return ResponseEntity.ok().body(this.sysUserService.convertToUpdateSystemUserResponse(updatedUser));
     }
 
     @DeleteMapping("/sys_users/{id}")
     @ApiMessage("Xóa người dùng hệ thống")
-    public ResponseEntity<String> deleteSystemUser(@PathVariable Long id) throws IdInvalidEx {
+    public ResponseEntity<String> deleteSystemUser(@PathVariable Long id) throws IdInvalidException {
         boolean idExists = this.sysUserService.idExists(id);
         if (!idExists) {
-            throw new IdInvalidEx("ID " + id + " không tồn tại");
+            throw new IdInvalidException("ID " + id + " không tồn tại");
         }
         this.sysUserService.handleDeleteSystemUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User with ID " + id + " deleted successfully");
