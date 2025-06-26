@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 public interface SystemUserRepository extends JpaRepository<SystemUserEntity, Long>, JpaSpecificationExecutor<SystemUserEntity> {
 
-    Optional<SystemUserEntity> findByUserName(String name);
+    Optional<SystemUserEntity> findByUserName(String userName);
+
     boolean existsByUserName(String name);
     boolean existsById(Long id);
 

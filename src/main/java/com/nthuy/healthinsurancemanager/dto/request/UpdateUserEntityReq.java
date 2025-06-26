@@ -18,7 +18,7 @@ public class UpdateUserEntityReq {
     private String gender;
     private String job;
     @NotBlank(message = "Số CCCD không được để trống")
-    @Size(min = 10, max = 10, message = "Số CMND/CCCD phải có đúng 10 ký tự")
+    @Size(min = 12, max = 12, message = "Số CMND/CCCD phải có đúng 12 ký tự")
     private String idCardNumber;
     private String phone;
     private String address;

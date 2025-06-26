@@ -46,6 +46,9 @@ public class SystemUserController {
         createSystemUserRequest.setPassWord(passwordEncoder.encode(createSystemUserRequest.getPassWord()));
         return ResponseEntity.status(HttpStatus.CREATED).body("User " + this.sysUserService.handleCreateUser(createSystemUserRequest) + " created successfully");
     }
+    // In HealthInsuranceCardController.java
+
+
 
     @GetMapping("/sys_users")
     @ApiMessage("Lấy danh sách tất cả người dùng hệ thống")

@@ -1,5 +1,6 @@
 package com.nthuy.healthinsurancemanager.dto.response;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class GetSystemUserResponse {
         this.phone = phone;
         this.email = email;
     }
+
 
     @Override
     public String toString() {

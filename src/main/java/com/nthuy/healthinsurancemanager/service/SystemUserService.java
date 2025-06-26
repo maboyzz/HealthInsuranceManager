@@ -39,6 +39,10 @@ public class SystemUserService {
         return this.systemUserRepository.existsById(id);
     }
 
+    public SystemUserEntity handleGetUserByUsername(String userName) {
+        return this.systemUserRepository.findByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("User with username " + userName + " does not exist"));
+    }
 
     public Long handleCreateUser(CreateSystemUserRequest sysUser) {
         SystemUserEntity systemUserEntity = new SystemUserEntity();
@@ -104,10 +108,7 @@ public class SystemUserService {
         this.systemUserRepository.deleteById(id);
     }
 
-    public SystemUserEntity handleGetUserByUsername(String username) {
-        Optional<SystemUserEntity> optionalSystemUser = this.systemUserRepository.findByUserName(username);
-        return optionalSystemUser.orElse(null);
-    }
+
 
     public UpdateSystemUserResponse convertToUpdateSystemUserResponse(SystemUserEntity systemUserEntity) {
         UpdateSystemUserResponse updateSystemUserResponse = new UpdateSystemUserResponse();

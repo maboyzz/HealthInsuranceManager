@@ -16,7 +16,7 @@ public class UpdateSystemUserRequest {
     private Date dateOfBirth;
     private EnumGender gender;
     @NotBlank(message = "CCCD không đươc để trống")
-    @Size(min = 10, max = 10, message = "Số CMND/CCCD phải có đúng 10 ký tự")
+    @Size(min = 12, max = 12, message = "Số CMND/CCCD phải có đúng 12 ký tự")
     private String idCardNumber;
     private String phone;
     private String address;

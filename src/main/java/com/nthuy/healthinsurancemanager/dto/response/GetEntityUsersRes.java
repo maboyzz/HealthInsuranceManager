@@ -10,19 +10,19 @@ import lombok.Setter;
 @Setter
 
 public class GetEntityUsersRes {
-    private Long id;
-    private String userName;
     private String fullName;
+    private String idCardNumber;
     private Date dateOfBirth;
     private String phone;
     private String email;
+    private String roleName;
 
-    public GetEntityUsersRes(Long id, String userName, String fullName, Date dateOfBirth, String phone, String email) {
-        this.id = id;
-        this.userName = userName;
+    public GetEntityUsersRes(String fullName,String idCardNumber, Date dateOfBirth, String phone, String email, String roleName) {
         this.fullName = fullName;
+        this.idCardNumber = idCardNumber;
         this.dateOfBirth = dateOfBirth;
         this.phone = phone;
         this.email = email;
+        this.roleName = roleName;
     }
 }

@@ -31,12 +31,4 @@ public class HealthInsuranceCardEntity extends BaseEntity{
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
-
-
-    private Date createdAt;
-    private Date updatedAt;
-    private String createdBy;
-    private String updatedBy;
-
-
 }

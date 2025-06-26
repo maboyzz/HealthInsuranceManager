@@ -2,7 +2,6 @@ package com.nthuy.healthinsurancemanager.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CreateHealthInsuranceCardReq {
+public class RenewHealthCardReq {
     @NotBlank(message = "Mã thẻ bảo hiểm không được để trống")
     private String cardNumber;
 
@@ -19,8 +18,4 @@ public class CreateHealthInsuranceCardReq {
 
     @NotNull(message = "Ngày hết hạn không được để trống")
     private Date expirationDate;
-
-    @NotBlank(message = "Số CCCD không được để trống")
-    @Size(min = 12, max = 12, message = "Số CMND/CCCD phải có đúng 12 ký tự")
-    private String idCardNumber;
 }

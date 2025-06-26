@@ -47,13 +47,11 @@ public class UserService {
     }
     public long handleCreateUserEntity(CreateUserEntityReq createUserEntityReq) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(createUserEntityReq.getUserName());
         userEntity.setFullName(createUserEntityReq.getFullName());
         userEntity.setDateOfBirth(createUserEntityReq.getDateOfBirth());
         userEntity.setGender(createUserEntityReq.getGender());
         userEntity.setJob(createUserEntityReq.getJob());
         userEntity.setIdCardNumber(createUserEntityReq.getIdCardNumber());
-        userEntity.setPassWord(createUserEntityReq.getPassWord());
         userEntity.setPhone(createUserEntityReq.getPhone());
         userEntity.setEmail(createUserEntityReq.getEmail());
         userEntity.setAddress(createUserEntityReq.getAddress());
@@ -93,12 +91,12 @@ public class UserService {
 
         List<GetEntityUsersRes> listUserEntitiesRes = userEntities.getContent().stream()
                 .map(user -> new GetEntityUsersRes(
-                        user.getId(),
-                        user.getUserName(),
                         user.getFullName(),
+                        user.getIdCardNumber(),
                         user.getDateOfBirth(),
                         user.getPhone(),
-                        user.getEmail()
+                        user.getEmail(),
+                        user.getRole().getName()
                 )).toList();
         resultPaginationDTO.setResults(listUserEntitiesRes);
         return resultPaginationDTO;

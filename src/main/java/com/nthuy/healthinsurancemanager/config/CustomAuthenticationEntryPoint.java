@@ -1,6 +1,7 @@
 package com.nthuy.healthinsurancemanager.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nthuy.healthinsurancemanager.constant.EnumErrorCode;
 import com.nthuy.healthinsurancemanager.dto.response.RestResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,13 +32,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json;charset=UTF-8");
 
         RestResponse<Object> res = new RestResponse<>();
-        res.setStatus(HttpStatus.UNAUTHORIZED.value());
+        res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
         String errMessage = Optional.ofNullable(authException.getCause())
                 .map(Throwable::getMessage)
                 .orElse(authException.getMessage());
 
-        res.setError(errMessage);
-        res.setMessage("Token không hợp lệ (đã hết hạn, không đúng định dạng hoặc không được cấp quyền truy cập)");
+        res.setErrorCode(EnumErrorCode.VALIDATION_ERROR);
+        res.setMessage("Token không hợp lệ (đã hết hạn, không đúng định dạng hoặc không được cấp quyền truy cập)"+errMessage);
 
         mapper.writeValue(response.getWriter(), res);
     }

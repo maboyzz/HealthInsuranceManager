@@ -13,11 +13,11 @@ import java.util.Arrays;
 public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Áp dụng cho tất cả các endpoint
-                .allowedOrigins("http://localhost:*", "https://yourdomain.com") // Danh sách origins được phép
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Các phương thức HTTP được phép
-                .allowedHeaders("*") // Cho phép tất cả headers
-                .allowCredentials(true) // Cho phép gửi cookie hoặc thông tin xác thực
-                .maxAge(3600); // Thời gian cache CORS preflight request (giây)
+        registry.addMapping("/**")
+                .allowedOriginPatterns("http://localhost:*") // Cho phép tất cả port localhost
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

@@ -36,11 +36,6 @@ public class UserController {
             @Valid
             @RequestBody CreateUserEntityReq createUserEntityReq
     ) throws UserNameExisted {
-        boolean userNameExists = this.userService.handleCheckUserNameExists(createUserEntityReq.getUserName());
-        if (userNameExists) {
-            throw new UserNameExisted("Username " + createUserEntityReq.getUserName() + " đã tồn tại");
-        }
-        createUserEntityReq.setPassWord(passwordEncoder.encode(createUserEntityReq.getPassWord()));
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.handleCreateUserEntity(createUserEntityReq));
     }
 
