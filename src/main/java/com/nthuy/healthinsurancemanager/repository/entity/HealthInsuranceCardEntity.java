@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -18,14 +19,12 @@ public class HealthInsuranceCardEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long cardId;
 
-    @NotBlank(message = "Mã thẻ bảo hiểm không được để trống")
-    @Column(unique = true)
     private String cardNumber;
 
-    private Date issueDate;
-    private Date expirationDate;
-
-    @Enumerated(EnumType.STRING)
+    private LocalDate issueDate;
+    private LocalDate  expirationDate;
+    private String placeOfRegistration;
+    private String areaCode;
     private CardStatus status;
 
     @OneToOne

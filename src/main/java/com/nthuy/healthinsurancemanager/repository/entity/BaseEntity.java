@@ -1,15 +1,17 @@
 package com.nthuy.healthinsurancemanager.repository.entity;
 
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
 import java.util.Date;
 
+@MappedSuperclass
 public class BaseEntity {
-    private String createdBy;
-    private String updatedBy;
-    private Date createdAt;
-    private Date updatedAt;
+    protected String createdBy;
+    protected String updatedBy;
+    protected Date createdAt;
+    protected Date updatedAt;
 
     @PreUpdate
     public void handleBeforeUpdate() {

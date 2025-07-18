@@ -1,5 +1,6 @@
 package com.nthuy.healthinsurancemanager.dto.request;
 
+import com.nthuy.healthinsurancemanager.constant.CardStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,10 +9,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Date;
-
 @Getter
 @Setter
-public class CreateHealthInsuranceCardReq {
+public class UpdateHealthCardReq {
     @NotBlank(message = "Mã thẻ bảo hiểm không được để trống")
     private String cardNumber;
 
@@ -29,4 +29,6 @@ public class CreateHealthInsuranceCardReq {
     private String placeOfRegistration;
     @NotBlank(message = "Mã khu vực không được để trống")
     private String areaCode;
+
+    private CardStatus status;
 }

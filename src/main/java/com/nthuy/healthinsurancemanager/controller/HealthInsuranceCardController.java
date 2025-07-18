@@ -4,6 +4,9 @@ import com.nthuy.healthinsurancemanager.Exception.IdInvalidException;
 import com.nthuy.healthinsurancemanager.dto.request.CreateHealthInsuranceCardReq;
 import com.nthuy.healthinsurancemanager.dto.request.RenewHealthCardReq;
 import com.nthuy.healthinsurancemanager.dto.request.ResultPaginationDTO;
+import com.nthuy.healthinsurancemanager.dto.request.UpdateHealthCardReq;
+import com.nthuy.healthinsurancemanager.dto.response.GetCardByIdRes;
+import com.nthuy.healthinsurancemanager.dto.response.GetHealthInsuranceCardRes;
 import com.nthuy.healthinsurancemanager.dto.response.RestResponse;
 import com.nthuy.healthinsurancemanager.repository.entity.HealthInsuranceCardEntity;
 import com.nthuy.healthinsurancemanager.repository.entity.SystemUserEntity;
@@ -43,7 +46,7 @@ public class HealthInsuranceCardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/cards/renew")
-    @ApiMessage("Tạo thẻ bảo hiểm y tế")
+    @ApiMessage("gia han thẻ bảo hiểm y tế")
     public ResponseEntity<RestResponse<Long>> renewHealthInsuranceCard(
             @Valid @RequestBody RenewHealthCardReq request
     ) {
@@ -64,7 +67,7 @@ public class HealthInsuranceCardController {
             throw new IdInvalidException("ID " + id + " không hợp lệ");
         }
         cardService.deleteHealthInsuranceCard(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Xoá người dùng thành công");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Xoá thành công");
     }
     @GetMapping("/cards")
     @ApiMessage("Lấy danh sách thẻ bảo hiểm y tế")
@@ -74,5 +77,38 @@ public class HealthInsuranceCardController {
     ) {
         return ResponseEntity.ok(this.cardService.handleGetAllHealthInsuranceCards(spec, pageable));
     }
+    @PutMapping("/cards/{id}")
+    @ApiMessage("Cập nhật thông tin thẻ bảo hiểm y tế")
+    public ResponseEntity<RestResponse<HealthInsuranceCardEntity>> updateHealthInsuranceCard(
+            @PathVariable long id, @Valid @RequestBody UpdateHealthCardReq healthInsuranceCard
+    ) {
+        this.cardService.updateHealthInsuranceCar(healthInsuranceCard, id);
+        RestResponse<HealthInsuranceCardEntity> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Cập nhật thẻ bảo hiểm thành công");
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/cards/{id}")
+    @ApiMessage("Lấy thông tin thẻ bảo hiểm y tế")
+    public ResponseEntity<GetCardByIdRes> getHealthInsuranceCardById(
+            @PathVariable Long id
+    ) {
+        GetCardByIdRes card = cardService.getHealthInsuranceCardById(id);
+        return ResponseEntity.ok(card);
+    }
+    @PutMapping("/cards/{cardNumber}/close")
+    @ApiMessage("Đóng thẻ bảo hiểm y tế")
+    public ResponseEntity<RestResponse<Void>> closeHealthCard(@PathVariable String cardNumber) {
+        cardService.closeHealthInsuranceCard(cardNumber);
+
+        RestResponse<Void> response = new RestResponse<>();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setMessage("Đóng thẻ thành công");
+        response.setErrorCode(null);
+        response.setData(null);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -14,8 +15,8 @@ public class RenewHealthCardReq {
     private String cardNumber;
 
     @NotNull(message = "Ngày phát hành không được để trống")
-    private Date issueDate;
+    private LocalDate issueDate;
 
     @NotNull(message = "Ngày hết hạn không được để trống")
-    private Date expirationDate;
+    private LocalDate expirationDate;
 }
